@@ -1,7 +1,10 @@
 use clap::{value_parser, Arg, ArgMatches, Command};
+use crate::settings::Settings;
+
+pub const COMMAND_NAME: &str = "serve";
 
 pub fn configure() -> Command {
-    Command::new("serve").about("Start HTTP server").arg(
+    Command::new(COMMAND_NAME).about("Start HTTP server").arg(
         Arg::new("port")
             .short('p')
             .long("port")
@@ -12,11 +15,11 @@ pub fn configure() -> Command {
     )
 }
 
-pub fn handle(matches: &ArgMatches) -> anyhow::Result<()> {
+pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
     if let Some(matches) = matches.subcommand_matches("serve") {
         let port: u16 = *matches.get_one("port").unwrap_or(&8080);
 
-        println!("TBD: start the webserver on port {}", port)
+        println!("TBD: start the webserver on port {} {:?}", port, settings);
     }
 
     Ok(())
