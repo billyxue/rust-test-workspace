@@ -1,8 +1,12 @@
 use crate::settings::Settings;
+use crate::state::ApplicationState;
+
 use clap::{value_parser, Arg, ArgMatches, Command};
 use axum::Router;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use tower_http::trace::TraceLayer;
+use std::sync::Arc;
+
 
 pub const COMMAND_NAME: &str = "serve";
 
@@ -29,17 +33,18 @@ pub fn handle(matches: &ArgMatches, settings: &Settings) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn start_tokio(port: u16, _settings: &Settings) -> anyhow::Result<()> {
+fn start_tokio(port: u16, settings: &Settings) -> anyhow::Result<()> {
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
         .unwrap()
         .block_on(async move {
+            let state = Arc::new(ApplicationState::new(settings)?);
             let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), port);
             // let routes = Router::new();
             // 要在 axum 中启用日志记录，
             // 在函数中的配置中添加一个新层
-            let routes = crate::api::configure()
+            let routes = crate::api::configure(state)
                 .layer(TraceLayer::new_for_http());
 
             tracing::info!("starting ... on {}", port);

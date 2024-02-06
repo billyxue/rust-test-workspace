@@ -5,13 +5,13 @@ use config::{Config, Environment, File};
 //我还添加了Default宏，以便能够实例化这些结构，而无需为所有字段指定值。
 //该Debug宏也很方便，因此我们可以稍后轻松记录配置内容。
 
-#[derive(Debug, Deserialize, Default)]
+#[derive(Debug, Deserialize, Default, Clone)]
 #[allow(unused)]
 pub struct Database {
-    pub url: String,
+    pub url: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Default)]
+#[derive(Debug, Deserialize, Default,Clone)]
 #[allow(unused)]
 pub struct Logging {
     pub log_level: Option<String>,
@@ -21,14 +21,14 @@ pub struct Logging {
 
 //let log_level = Settings.Logging.log_level.unwrap_or("info");
 
-#[derive(Debug, Deserialize, Default)]
+#[derive(Debug, Deserialize, Default, Clone)]
 #[allow(unused)]
 pub struct ConfigInfo {
     pub location: Option<String>,
     pub env_prefix: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Default)]
+#[derive(Debug, Deserialize, Default, Clone)]
 #[allow(unused)]
 pub struct Settings {
     #[serde(default)]
