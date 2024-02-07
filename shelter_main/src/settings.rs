@@ -38,6 +38,11 @@ pub struct Settings {
     pub database: Database,
     #[serde(default)]
     pub logging: Logging,
+
+    #[serde(default)]
+    pub token_secret: String,
+    #[serde(default)]
+    pub token_timeout_seconds: i64,
 }
 //
 // 主Settings结构将包含数据库和日志记录配置。
