@@ -110,6 +110,9 @@ fn start_tokio(port: u16, settings: &Settings) -> anyhow::Result<()> {
         .block_on(async move {
 
             global::set_text_map_propagator(TraceContextPropagator::new());
+
+
+            /*
             let otlp_endpoint = settings
                 .tracing
                 .otlp_endpoint
@@ -127,6 +130,26 @@ fn start_tokio(port: u16, settings: &Settings) -> anyhow::Result<()> {
 
             let _meter_provider = init_metrics(&otlp_endpoint);
             let _log_provider = init_logs(&otlp_endpoint);
+            */
+
+            let subscriber =
+                tracing_subscriber::registry().with(LevelFilter::from_level(Level::DEBUG));
+
+            let telemetry_layer =
+                if let Some(otlp_endpoint) = settings.tracing.otlp_endpoint.clone() {
+                    let tracer = init_tracer(&otlp_endpoint)?;
+                    let _meter_provider = init_metrics(&otlp_endpoint);
+                    let _log_provider = init_logs(&otlp_endpoint);
+
+                    Some(tracing_opentelemetry::layer().with_tracer(tracer))
+                } else {
+                    None
+                };
+
+            subscriber
+                .with(telemetry_layer)
+                .with(fmt::Layer::default())
+                .init();
 
 
 

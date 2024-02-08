@@ -1,7 +1,8 @@
 use serde::Deserialize;
 use serde::Serialize;
+use utoipa::ToSchema;
 
-#[derive(Deserialize)]
+#[derive(Deserialize,ToSchema)]
 pub struct LoginRequest {
     pub username: String,
     pub password: String,

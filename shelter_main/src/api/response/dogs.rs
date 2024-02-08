@@ -1,8 +1,9 @@
 use entity::dog::Model;
 use serde::Serialize;
 use crate::api::response::error::Status;
+use utoipa::ToSchema;
 
-#[derive(Serialize)]
+#[derive(Serialize,ToSchema)]
 pub struct DogCreateResponse {
     //pub status: String,
     pub status: Status,
@@ -10,13 +11,13 @@ pub struct DogCreateResponse {
 }
 
 
-#[derive(Serialize)]
+#[derive(Serialize,ToSchema)]
 pub struct DogListResponse {
     pub status: Status,
     pub data: Vec<Model>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize,ToSchema)]
 pub struct DogGetResponse {
     pub status: Status,
     pub data: Option<Model>,
