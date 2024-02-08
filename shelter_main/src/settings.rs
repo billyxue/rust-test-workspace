@@ -1,6 +1,12 @@
 use serde::Deserialize;
 use config::{Config, Environment, File};
 
+#[derive(Debug, Deserialize, Default, Clone)]
+#[allow(unused)]
+pub struct Tracing {
+    pub otlp_endpoint: Option<String>,
+}
+
 //为了能够从各种格式反序列化这些结构，我们必须将宏添加Deserialize 到结构中。
 //我还添加了Default宏，以便能够实例化这些结构，而无需为所有字段指定值。
 //该Debug宏也很方便，因此我们可以稍后轻松记录配置内容。
@@ -38,6 +44,9 @@ pub struct Settings {
     pub database: Database,
     #[serde(default)]
     pub logging: Logging,
+
+    #[serde(default)]
+    pub tracing: Tracing,
 
     #[serde(default)]
     pub token_secret: String,
